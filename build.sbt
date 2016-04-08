@@ -1,4 +1,4 @@
-name := """play-reactive-mongo-db"""
+name := """goc_backend"""
 
 version := "1.0-SNAPSHOT"
 
