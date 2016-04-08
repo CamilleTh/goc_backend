@@ -17,24 +17,24 @@ import services.GeoCodageService
 class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val geoCodageService:GeoCodageService)(implicit exec: ExecutionContext) extends Controller with MongoController with ReactiveMongoComponents {
 
 
-  def transport = Action.async{
+  def transport(lat: Long, lng: Long) = Action.async{
     geoCodageService.getCoordinatesFromAddress("OTTANGE") map println
     Future.successful(Ok(JsNumber(50)))
   }
 
-  def security = Action.async{
+  def security(lat: Long, lng: Long) = Action.async{
     Future.successful(Ok(JsNumber(50)))
   }
 
-  def digital = Action.async{
+  def digital(lat: Long, lng: Long) = Action.async{
     Future.successful(Ok(JsNumber(50)))
   }
 
-  def health = Action.async{
+  def health(lat: Long, lng: Long) = Action.async{
     Future.successful(Ok(JsNumber(50)))
   }
   
-  def weather(lat: Long, long: Long) = Action.async{
+  def weather(lat: Long, lng: Long) = Action.async{
     Future.successful(Ok(JsNumber(50)))
   }
 

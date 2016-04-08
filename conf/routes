@@ -1,5 +1,5 @@
-GET        /api/transport        controllers.FeelController.transport
-GET        /api/security         controllers.FeelController.security
-GET        /api/health           controllers.FeelController.health
-GET        /api/digital          controllers.FeelController.digital
-GET        /api/weather          controllers.FeelController.weather(lat: Long, long: Long)
+GET        /api/transport        controllers.FeelController.transport(lat: Long, lng: Long)
+GET        /api/security         controllers.FeelController.security(lat: Long, lng: Long)
+GET        /api/health           controllers.FeelController.health(lat: Long, lng: Long)
+GET        /api/digital          controllers.FeelController.digital(lat: Long, lng: Long)
+GET        /api/weather          controllers.FeelController.weather(lat: Long, lng: Long)
