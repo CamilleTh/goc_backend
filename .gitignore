@@ -3,3 +3,4 @@ target/*
 .idea_modules/*
 project/project/*
 project/target/*
+logs/*

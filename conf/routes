@@ -10,4 +10,3 @@ POST     /persons/                  controllers.PersonController.createFromJson
 POST     /persons/bulk              controllers.PersonController.createBulkFromJson
 
 GET      /persons                   controllers.PersonController.findByName(name: String)
-
