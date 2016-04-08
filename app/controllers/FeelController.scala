@@ -19,23 +19,23 @@ class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val geoCod
 
   def transport(lat: Long, lng: Long) = Action.async{
     geoCodageService.getCoordinatesFromAddress("OTTANGE") map println
-    Future.successful(Ok(JsNumber(50)))
+    Future.successful(Ok(JsNumber((Math.random()*100.toInt))))
   }
 
   def security(lat: Long, lng: Long) = Action.async{
-    Future.successful(Ok(JsNumber(50)))
+    Future.successful(Ok(JsNumber((Math.random()*100.toInt))))
   }
 
   def digital(lat: Long, lng: Long) = Action.async{
-    Future.successful(Ok(JsNumber(50)))
+    Future.successful(Ok(JsNumber((Math.random()*100.toInt))))
   }
 
   def health(lat: Long, lng: Long) = Action.async{
-    Future.successful(Ok(JsNumber(50)))
+    Future.successful(Ok(JsNumber((Math.random()*100.toInt))))
   }
   
   def weather(lat: Long, lng: Long) = Action.async{
-    Future.successful(Ok(JsNumber(50)))
+    Future.successful(Ok(JsNumber((Math.random()*100).toInt)))
   }
 
 
