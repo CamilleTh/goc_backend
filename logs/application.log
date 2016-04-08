@@ -1,0 +1,8 @@
+2016-04-08 20:56:29,852 [INFO] from play.core.server.NettyServer in pool-14-thread-1 - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+2016-04-08 20:56:37,102 [INFO] from play.api.Play in ForkJoinPool-1-worker-1 - Application started (Dev)
+2016-04-08 20:56:44,244 [INFO] from application in application-akka.actor.default-dispatcher-4 - ReactiveMongoApi starting...
+2016-04-08 20:56:44,366 [INFO] from application in application-akka.actor.default-dispatcher-4 - ReactiveMongoApi successfully configured with DB 'game_of_code'! Servers:
+		[localhost:27017]
+2016-04-08 23:25:34,598 [INFO] from application in ForkJoinPool-4-worker-7 - ReactiveMongoApi stopping...
+2016-04-08 23:25:34,684 [INFO] from application in ForkJoinPool-4-worker-5 - ReactiveMongoApi connections stopped. [Success(Closed)]
+2016-04-08 23:25:34,690 [WARN] from reactivemongo.core.actors.MongoDBSystem in reactivemongo-akka.actor.default-dispatcher-3 - MongoDBSystem Actor[akka://reactivemongo/user/Connection-2#1550552395] stopped.
