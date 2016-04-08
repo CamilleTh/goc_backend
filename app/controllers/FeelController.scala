@@ -33,6 +33,10 @@ class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val geoCod
   def health = Action.async{
     Future.successful(Ok(JsNumber(50)))
   }
+  
+  def weather(lat: Long, long: Long) = Action.async{
+    Future.successful(Ok(JsNumber(50)))
+  }
 
 
 
