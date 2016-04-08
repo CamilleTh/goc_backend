@@ -4,3 +4,9 @@ target/*
 project/project/*
 project/target/*
 logs/*
+logs/application.log
+.cache-main
+.classpath
+.project
+.settings/*
+bin/*
