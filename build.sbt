@@ -1,4 +1,4 @@
-name := """play-reactive-mongo-db"""
+name := """goc_backend"""
 
 version := "1.0-SNAPSHOT"
 
@@ -9,7 +9,8 @@ scalaVersion := "2.11.7"
 routesGenerator := InjectedRoutesGenerator
 
 libraryDependencies ++= Seq(
-  "org.reactivemongo" %% "play2-reactivemongo" % "0.11.11"
+  "org.reactivemongo" %% "play2-reactivemongo" % "0.11.11",
+  ws
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
