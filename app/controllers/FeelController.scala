@@ -18,27 +18,32 @@ class FeelController @Inject() (val reactiveMongoApi: ReactiveMongoApi, val geoC
 
   def transport(lat: Long, lng: Long) = Action.async {
     geoCodageService.getCoordinatesFromAddress("OTTANGE") map println
-    Future.successful(Ok(JsNumber(50)))
+    Future.successful(Ok(JsNumber((Math.random() * 100.toInt))))
   }
 
   def security(lat: Long, lng: Long) = Action.async {
-    Future.successful(Ok(JsNumber(50)))
+    Future.successful(Ok(JsNumber((Math.random() * 100.toInt))))
   }
 
   def digital(lat: Long, lng: Long) = Action.async {
-    Future.successful(Ok(JsNumber(50)))
+    Future.successful(Ok(JsNumber((Math.random() * 100.toInt))))
   }
 
   def health(lat: Long, lng: Long) = Action.async {
-    Future.successful(Ok(JsNumber(50)))
+    Future.successful(Ok(JsNumber((Math.random() * 100.toInt))))
+  }
+
+  def weather(lat: Long, lng: Long) = Action.async {
+    Future.successful(Ok(JsNumber((Math.random() * 100).toInt)))
   }
 
   def weather(lat: Long, lng: Long) = Action.async {
     val percentOpenWeather: Future[Option[Int]] = weatherServices.getWeatherFeelingFromOpenWeather(lat, lng);
     percentOpenWeather.map { optionPercent =>
       optionPercent match {
-        case Some(x) => println("Some" + x) ; Ok(JsNumber(x))
-        case None    => println("None") ; Ok(JsNumber(0))
+        case Some(x) =>
+          println("Some" + x); Ok(JsNumber(x))
+        case None    => println("None"); Ok(JsNumber(0))
       }
     }
   }
