@@ -6,40 +6,37 @@ import play.api.libs.json._
 import play.api.mvc._
 import play.modules.reactivemongo._
 import scala.concurrent.{ExecutionContext, Future}
-import services.GeoCodageService
+import services.{TransportServices, GeoCodageService}
 
-
-/**
- * Simple controller that directly stores and retrieves [models.City] instances into a MongoDB Collection
- * Input is first converted into a city and then the city is converted to JsObject to be stored in MongoDB
- */
 @Singleton
-class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val geoCodageService:GeoCodageService)(implicit exec: ExecutionContext) extends Controller with MongoController with ReactiveMongoComponents {
+class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val geoCodageService:GeoCodageService, val transportServices:TransportServices)(implicit exec: ExecutionContext) extends Controller with MongoController with ReactiveMongoComponents {
 
-
-  def transport(lat: Long, lng: Long) = Action.async{
-    geoCodageService.getCoordinatesFromAddress("OTTANGE") map println
-    Future.successful(Ok(JsNumber((Math.random()*100.toInt))))
+  def transport(lat: Double, lng: Double) = Action.async{
+    for {
+      aroundRadar <- transportServices.getAroundRadars(lat,lng)
+      aroundAccident <- transportServices.getAroundAccidents(lat,lng)
+    } yield {
+      println(aroundRadar)
+      println(aroundAccident)
+      Ok(JsNumber(100 + aroundRadar - aroundAccident))
+    }
   }
 
-  def security(lat: Long, lng: Long) = Action.async{
-    Future.successful(Ok(JsNumber((Math.random()*100.toInt))))
-  }
-
-  def digital(lat: Long, lng: Long) = Action.async{
-    Future.successful(Ok(JsNumber((Math.random()*100.toInt))))
-  }
-
-  def health(lat: Long, lng: Long) = Action.async{
-    Future.successful(Ok(JsNumber((Math.random()*100.toInt))))
-  }
-  
-  def weather(lat: Long, lng: Long) = Action.async{
+  def security(lat: Double, lng: Double) = Action.async{
     Future.successful(Ok(JsNumber((Math.random()*100).toInt)))
   }
 
+  def digital(lat: Double, lng: Double) = Action.async{
+   Future.successful(Ok(JsNumber((Math.random()*100).toInt)))
+  }
 
-
+  def health(lat: Double, lng: Double) = Action.async{
+    Future.successful(Ok(JsNumber((Math.random()*100).toInt)))
+  }
+  
+  def weather(lat: Double, lng: Double) = Action.async{
+    Future.successful(Ok(JsNumber((Math.random()*100).toInt)))
+  }
 }
 
 
