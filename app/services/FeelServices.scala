@@ -50,7 +50,7 @@ class FeelServices @Inject()(val reactiveMongoApi: ReactiveMongoApi,constant:Con
       last_error <- feelingsCol.insert(
         Json.obj(
           "feeling" -> constant.BAD_FEELING,
-          "date" -> Json.obj("$gte" -> Json.obj("$date" -> DateTime.now.minusHours(1).getMillis)),
+          "date" -> Json.obj("$date" -> DateTime.now.getMillis),
           "type" -> feeling_type,
           "geometry" -> Json.obj(
             "$near" -> Json.obj(
@@ -70,7 +70,7 @@ class FeelServices @Inject()(val reactiveMongoApi: ReactiveMongoApi,constant:Con
       last_error <- feelingsCol.insert(
         Json.obj(
           "feeling" -> constant.GOOD_FEELING,
-          "date" -> Json.obj("$gte" -> Json.obj("$date" -> DateTime.now.minusHours(1).getMillis)),
+          "date" -> Json.obj("$date" -> DateTime.now.getMillis),
           "type" -> feeling_type,
           "geometry" -> Json.obj(
             "$near" -> Json.obj(
