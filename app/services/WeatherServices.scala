@@ -12,7 +12,7 @@ case class OpenWeather(id: Long, main: String, description: String, icon: String
 @Singleton
 class WeatherServices @Inject() (constants: Constants, ws: WSClient) {
 
-  def getWeatherFeelingFromOpenWeather(lat: Long, lng: Long) = {
+  def getWeatherFeelingFromOpenWeather(lat: Double, lng: Double) = {
 
     val url = constants.OPEN_WEATHER_API_URL;
     val urlWithParam = ws.url(url).withQueryString("appid" -> constants.OPEN_WEATHER_API_KEY, "lat" -> lat.toString(), "lon" -> lng.toString())
