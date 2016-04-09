@@ -16,6 +16,8 @@ libraryDependencies ++= Seq(
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
+libraryDependencies += filters
+
 scalacOptions in ThisBuild ++= Seq("-feature", "-language:postfixOps")
 
 fork in run := true
