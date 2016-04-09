@@ -6,13 +6,14 @@ import play.api.libs.json._
 import play.api.mvc._
 import play.modules.reactivemongo._
 import scala.concurrent.{ ExecutionContext, Future }
-import services.GeoCodageService
-import services.WeatherServices;
+import services._
+
 import scala.concurrent.{ExecutionContext, Future}
-import services.{TransportServices, GeoCodageService}
+import scala.Some
+import play.api.libs.json.JsNumber
 
 @Singleton
-class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val geoCodageService:GeoCodageService, val transportServices:TransportServices, val weatherServices:WeatherServices)(implicit exec: ExecutionContext) extends Controller with MongoController with ReactiveMongoComponents {
+class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val geoCodageService:GeoCodageService, val transportServices:TransportServices, val weatherServices:WeatherServices, val securityServices:SecurityServices)(implicit exec: ExecutionContext) extends Controller with MongoController with ReactiveMongoComponents {
 
   def transport(lat: Double, lng: Double) = Action.async{
     for {
@@ -26,7 +27,9 @@ class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val geoCod
   }
 
   def security(lat: Double, lng: Double) = Action.async{
-    Future.successful(Ok(JsNumber((Math.random()*100).toInt)))
+    securityServices.getAroundCrimes(lat,lng) map { res =>
+      Ok(JsNumber(100 - res))
+    }
   }
 
   def digital(lat: Double, lng: Double) = Action.async{
@@ -46,6 +49,10 @@ class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val geoCod
         case None    => println("None"); Ok(JsNumber(0))
       }
     }
+  }
+
+  def up(category:String) = Action.async{
+    Future.successful(Ok(category))
   }
 }
 
