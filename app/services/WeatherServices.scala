@@ -1,45 +1,42 @@
 package services
-import play.api._
-import play.api.mvc._
-import play.api.Play.current
 import javax.inject._
-
-import play.api.Play.current
-//import play.api.libs.ws._
-//import play.api.libs.ws.ning.NingAsyncHttpClientConfigBuilder
-import scala.concurrent.Future
+import play.api.libs.ws._
+import utils.{ Constants }
+import models.OpenWeather._
+import models.OpenWeatherResponse
 import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.json.{ JsValue, JsObject, JsArray }
 
+case class OpenWeather(id: Long, main: String, description: String, icon: String)
 
-import play.api.libs.json.Json
-//
-//case class OpenWeather(id: Long, main: String, description: String, icon: String)
-//
-class WeatherServices @Inject(){
-//(ws: WSClient) {
-//  
-//  implicit val myJsonFormat = Json.format[OpenWeather]
-//  
-//  def get = {
-//		val id:Long		= 2657896
-//		val cnt:Int		= 2 // # of forecasted days 
-//		val url:String	= "http://api.openweathermap.org/data/2.5/forecast/daily?id="+id+"&cnt="+cnt+"&mode=json"
-//		//val url:String = "http://api.openweathermap.org/data/2.5/weather?id="+id
-//
-//		val tbParser:String = """{"code": "salut", "array": [{"b": "dsa"},{"b": "fds"},{"b": "rewq"}]}"""
-//
-//		println((Json.parse(tbParser) \ "array" \\ "b").map{_.as[String]})
-//
-//		val holder: WSRequestHolder = ws.url(url)
-//		val futureResponse: Future[WSResponse] = holder.get()
-//
-//		futureResponse.map{a=> 	
-//			(a.json \ "list"  \\ "weather").map{b => 
-//				(b \\ "icon").map{_.as[String]}
-//			}
-//
-//			(a.json \ "list" \\ "weather").map{_.as[OpenWeather]}
-//		}
-//	}
-  
+@Singleton
+class WeatherServices @Inject() (constants: Constants, ws: WSClient) {
+
+  def getWeatherFeelingFromOpenWeather(lat: Long, lng: Long) = {
+
+    val url = constants.OPEN_WEATHER_API_URL;
+    val urlWithParam = ws.url(url).withQueryString("appid" -> constants.OPEN_WEATHER_API_KEY, "lat" -> lat.toString(), "lon" -> lng.toString())
+    println(urlWithParam.uri.toString());
+    urlWithParam.get map {
+      response =>
+        response.json.asOpt[OpenWeatherResponse] map {
+          _.weather.head.id match {
+            case additional if (additional > 950)     => println(50); 50;
+            case extreme if (extreme > 900)           => println(1); 1;
+            case cloud if (cloud > 801)               => println(80); 80;
+            case clear if (clear > 800)               => println(95); 95;
+            case atmosphere if (atmosphere > 700)     => println(5); 5;
+            case snow if (snow > 600)                 => println(5); 5;
+            case rain if (rain > 500)                 => println(25); 25
+            case drizzle if (drizzle > 300)           => println(20); 20;
+            case thunderstorm if (thunderstorm > 200) => println(10); 10;
+            case other => {
+              println("WARNING, BAD RETURN OpenWeather:" + other);
+              0;
+            }
+          }
+        }
+    }
+  }
+
 }

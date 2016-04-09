@@ -1,9 +1,10 @@
 package services
 
-import utils.GeoCodage._
+import models.GeoCodage._
 import javax.inject._
 import play.api.libs.ws._
-import utils.{GeoCodageResponse, Constants}
+import utils.{Constants}
+import models.GeoCodageResponse
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{JsValue, JsObject, JsArray}
 

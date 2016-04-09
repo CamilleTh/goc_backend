@@ -10,3 +10,4 @@ logs/application.log
 .project
 .settings/*
 bin/*
+/bin/
