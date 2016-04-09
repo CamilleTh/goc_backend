@@ -8,38 +8,50 @@ import play.modules.reactivemongo._
 import scala.concurrent.{ ExecutionContext, Future }
 import services.GeoCodageService
 import services.WeatherServices;
+import scala.concurrent.{ ExecutionContext, Future }
+import services.{ TransportServices, GeoCodageService, DigitalService }
 
-/**
- * Simple controller that directly stores and retrieves [models.City] instances into a MongoDB Collection
- * Input is first converted into a city and then the city is converted to JsObject to be stored in MongoDB
- */
 @Singleton
-class FeelController @Inject() (val reactiveMongoApi: ReactiveMongoApi, val geoCodageService: GeoCodageService, val weatherServices: WeatherServices)(implicit exec: ExecutionContext) extends Controller with MongoController with ReactiveMongoComponents {
+class FeelController @Inject() (val reactiveMongoApi: ReactiveMongoApi, val geoCodageService: GeoCodageService, val transportServices: TransportServices, val weatherServices: WeatherServices, val digitalService: DigitalService)(implicit exec: ExecutionContext) extends Controller with MongoController with ReactiveMongoComponents {
 
-  def transport(lat: Long, lng: Long) = Action.async {
-    geoCodageService.getCoordinatesFromAddress("OTTANGE") map println
-    Future.successful(Ok(JsNumber((Math.random() * 100.toInt))))
+  def transport(lat: Double, lng: Double) = Action.async {
+    for {
+      aroundRadar <- transportServices.getAroundRadars(lat, lng)
+      aroundAccident <- transportServices.getAroundAccidents(lat, lng)
+    } yield {
+      println(aroundRadar)
+      println(aroundAccident)
+      Ok(JsNumber(100 + aroundRadar - aroundAccident))
+    }
   }
 
-  def security(lat: Long, lng: Long) = Action.async {
-    Future.successful(Ok(JsNumber((Math.random() * 100.toInt))))
+  def security(lat: Double, lng: Double) = Action.async {
+    Future.successful(Ok(JsNumber((Math.random() * 100).toInt)))
   }
 
-  def digital(lat: Long, lng: Long) = Action.async {
-    Future.successful(Ok(JsNumber((Math.random() * 100.toInt))))
+  def digital(lat: Double, lng: Double) = Action.async {
+    for {
+      uHD3 <- digitalService.getUHD3(lat, lng)
+    } yield {
+      uHD3 match {
+        case Some(x) =>
+          println("SomeDigital : " + x); Ok(JsNumber(x.UHD3.replace("%", "").toDouble))
+        case None => println("NoneDigital"); Ok(JsNumber(0))
+      }
+    }
   }
 
-  def health(lat: Long, lng: Long) = Action.async {
-    Future.successful(Ok(JsNumber((Math.random() * 100.toInt))))
+  def health(lat: Double, lng: Double) = Action.async {
+    Future.successful(Ok(JsNumber((Math.random() * 100).toInt)))
   }
 
-  def weather(lat: Long, lng: Long) = Action.async {
+  def weather(lat: Double, lng: Double) = Action.async {
     val percentOpenWeather: Future[Option[Int]] = weatherServices.getWeatherFeelingFromOpenWeather(lat, lng);
     percentOpenWeather.map { optionPercent =>
       optionPercent match {
         case Some(x) =>
           println("Some" + x); Ok(JsNumber(x))
-        case None    => println("None"); Ok(JsNumber(0))
+        case None => println("NoneWeather"); Ok(JsNumber(0))
       }
     }
   }
