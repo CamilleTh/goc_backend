@@ -7,6 +7,7 @@ class Constants {
   val OPEN_WEATHER_API_URL = s"http://api.openweathermap.org/data/2.5/weather"
 
   val DATA_TRANSPORT = "TRANSPORT"
+  val DATA_ROAD_HOG = "DATA_ROAD_HOG"
   val DATA_RADAR = "RADARS"
   val DATA_ACCIDENT = "ACCIDENT"
   val DATA_SECURITY = "SECURITY"

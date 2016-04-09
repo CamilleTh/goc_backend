@@ -22,9 +22,10 @@ class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val consta
     for {
       aroundRadar <- transportServices.getAroundRadars(lat,lng)
       aroundAccident <- transportServices.getAroundAccidents(lat,lng)
+      aroundRoadHog <- transportServices.getAroundRoadHog(lat,lng)
       transportFeelings <- feelServices.getFeelings(lat,lng,constants.DATA_TRANSPORT)
     } yield {
-      Ok(JsNumber(100 + aroundRadar - aroundAccident + transportFeelings))
+      Ok(JsNumber(100 + aroundRadar - aroundAccident + transportFeelings - aroundRoadHog))
     }
   }
 
