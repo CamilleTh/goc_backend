@@ -8,8 +8,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{ JsValue, JsObject, JsArray }
 import scala.concurrent.Future
 
-case class OpenWeather(id: Long, main: String, description: String, icon: String)
-
 @Singleton
 class WeatherServices @Inject() (constants: Constants, ws: WSClient) {
 

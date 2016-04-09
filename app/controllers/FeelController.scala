@@ -7,8 +7,6 @@ import play.api.mvc._
 import play.modules.reactivemongo._
 import scala.concurrent.{ ExecutionContext, Future }
 import services._
-
-import scala.concurrent.{ExecutionContext, Future}
 import scala.Some
 import play.api.libs.json.JsNumber
 import utils.Constants
@@ -16,9 +14,10 @@ import models.Coordinates
 import models.Coordinates._
 
 @Singleton
-class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val constants:Constants, feelServices:FeelServices, val geoCodageService:GeoCodageService, val transportServices:TransportServices, val weatherServices:WeatherServices, val securityServices:SecurityServices)(implicit exec: ExecutionContext) extends Controller with MongoController with ReactiveMongoComponents {
+class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val constants:Constants, feelServices:FeelServices, val geoCodageService:GeoCodageService, val transportServices:TransportServices, val weatherServices:WeatherServices, val securityServices:SecurityServices, val digitalService : DigitalService)(implicit exec: ExecutionContext) extends Controller with MongoController with ReactiveMongoComponents {
 
-  def transport(lat: Double, lng: Double) = Action.async{
+
+  def transport(lat: Double, lng: Double) = Action.async {
     for {
       aroundRadar <- transportServices.getAroundRadars(lat,lng)
       aroundAccident <- transportServices.getAroundAccidents(lat,lng)
@@ -38,12 +37,20 @@ class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val consta
     }
   }
 
-  def digital(lat: Double, lng: Double) = Action.async{
-   Future.successful(Ok(JsNumber((Math.random()*100).toInt)))
+  def digital(lat: Double, lng: Double) = Action.async {
+    for {
+      uHD3 <- digitalService.getUHD3(lat, lng)
+    } yield {
+      uHD3 match {
+        case Some(x) =>
+          println("SomeDigital : " + x); Ok(JsNumber(x.UHD3.replace("%", "").toDouble))
+        case None => println("NoneDigital"); Ok(JsNumber(0))
+      }
+    }
   }
 
-  def health(lat: Double, lng: Double) = Action.async{
-    Future.successful(Ok(JsNumber((Math.random()*100).toInt)))
+  def health(lat: Double, lng: Double) = Action.async {
+    Future.successful(Ok(JsNumber((Math.random() * 100).toInt)))
   }
 
   def weather(lat: Double, lng: Double) = Action.async {
