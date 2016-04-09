@@ -4,6 +4,7 @@ GET         /api/health                 controllers.FeelController.health(lat: D
 GET         /api/digital                controllers.FeelController.digital(lat: Double, lng: Double)
 GET         /api/weather                controllers.FeelController.weather(lat: Double, lng: Double)
 
+POST        /api/:category/down         controllers.FeelController.down(category:String)
 POST        /api/:category/up           controllers.FeelController.up(category:String)
 
 POST        /api/speeding/:speed        controllers.FeelController.addSpeed(speed:Int)

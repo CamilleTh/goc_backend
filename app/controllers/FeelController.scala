@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-
+import play.api.cache._
 import play.api.libs.json._
 import play.api.mvc._
 import play.modules.reactivemongo._
@@ -14,7 +14,7 @@ import models.Coordinates
 import models.Coordinates._
 
 @Singleton
-class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val constants:Constants, feelServices:FeelServices, val geoCodageService:GeoCodageService, val transportServices:TransportServices, val weatherServices:WeatherServices, val securityServices:SecurityServices, val digitalService : DigitalService)(implicit exec: ExecutionContext) extends Controller with MongoController with ReactiveMongoComponents {
+class FeelController @Inject()(cache: CacheApi,val reactiveMongoApi: ReactiveMongoApi,val constants:Constants, feelServices:FeelServices, val geoCodageService:GeoCodageService, val transportServices:TransportServices, val weatherServices:WeatherServices, val securityServices:SecurityServices, val digitalService : DigitalService)(implicit exec: ExecutionContext) extends Controller with MongoController with ReactiveMongoComponents {
 
 
   def transport(lat: Double, lng: Double) = Action.async {
@@ -24,7 +24,7 @@ class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val consta
       aroundRoadHog <- transportServices.getAroundRoadHog(lat,lng)
       transportFeelings <- feelServices.getFeelings(lat,lng,constants.DATA_TRANSPORT)
     } yield {
-      Ok(JsNumber(100 + aroundRadar - aroundAccident + transportFeelings - aroundRoadHog))
+      Ok(JsNumber(100 + aroundRadar - aroundAccident + transportFeelings * 10 - aroundRoadHog))
     }
   }
 
@@ -33,7 +33,7 @@ class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val consta
       aroundCrimes <- securityServices.getAroundCrimes(lat,lng)
       securityFeelings <- feelServices.getFeelings(lat,lng,constants.DATA_SECURITY)
     } yield {
-      Ok(JsNumber(100 - aroundCrimes + securityFeelings))
+      Ok(JsNumber(100 - aroundCrimes + securityFeelings * 10))
     }
   }
 
@@ -50,7 +50,17 @@ class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val consta
   }
 
   def health(lat: Double, lng: Double) = Action.async {
-    Future.successful(Ok(JsNumber((Math.random() * 100).toInt)))
+    val health = cache.get[Int]("health") match {
+      case Some(h) => h
+      case None => (Math.random() * 100).toInt
+    }
+    val newhealth = health > 100 match {
+      case true => 0
+      case false => health+1
+    }
+    cache.set("health", newhealth)
+    println(newhealth)
+    Future.successful(Ok(JsNumber(newhealth)))
   }
 
   def weather(lat: Double, lng: Double) = Action.async {
@@ -58,7 +68,7 @@ class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val consta
       percentOpenWeatherOpt <- weatherServices.getWeatherFeelingFromOpenWeather(lat, lng)
       weatherFeelings <- feelServices.getFeelings(lat,lng,constants.DATA_WEATHER)
     } yield {
-      Ok(JsNumber(percentOpenWeatherOpt.getOrElse(0) + weatherFeelings))
+      Ok(JsNumber(percentOpenWeatherOpt.getOrElse(0) + weatherFeelings * 10))
     }
   }
 

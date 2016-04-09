@@ -41,7 +41,7 @@ class FeelServices @Inject()(val reactiveMongoApi: ReactiveMongoApi,constant:Con
           )))
       )
     } yield {
-      good_feelings_count + bad_feelings_count
+      good_feelings_count - bad_feelings_count
     }
   }
 
@@ -53,12 +53,8 @@ class FeelServices @Inject()(val reactiveMongoApi: ReactiveMongoApi,constant:Con
           "feeling" -> constant.BAD_FEELING,
           "date" -> Json.obj("$date" -> DateTime.now.getMillis),
           "type" -> feeling_type,
-          "geometry" -> Json.obj(
-            "$near" -> Json.obj(
-              "$geometry" -> Json.obj("type" -> "Point", "coordinates" -> JsArray(Seq(JsNumber(lat),JsNumber(lng)))),
-              "$maxDistance" -> 1000
-            )
-          ))
+          "geometry" -> Json.obj("type" -> "Point", "coordinates" -> JsArray(Seq(JsNumber(lat),JsNumber(lng))))
+        )
       )
     } yield {
       last_error.ok
@@ -73,17 +69,14 @@ class FeelServices @Inject()(val reactiveMongoApi: ReactiveMongoApi,constant:Con
           "feeling" -> constant.GOOD_FEELING,
           "date" -> Json.obj("$date" -> DateTime.now.getMillis),
           "type" -> feeling_type,
-          "geometry" -> Json.obj(
-            "$near" -> Json.obj(
-              "$geometry" -> Json.obj("type" -> "Point", "coordinates" -> JsArray(Seq(JsNumber(lat),JsNumber(lng)))),
-              "$maxDistance" -> 1000
-            )
-          ))
+          "geometry" -> Json.obj("type" -> "Point", "coordinates" -> JsArray(Seq(JsNumber(lat),JsNumber(lng))))
+          )
       )
     } yield {
       last_error.ok
     }
   }
+
   def addSpeed(lat:Double,lng:Double,speed:Int) = {
     for {
       userDataCol <- user_data
