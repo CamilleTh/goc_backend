@@ -34,10 +34,6 @@ class FeelController @Inject() (val reactiveMongoApi: ReactiveMongoApi, val geoC
   }
 
   def weather(lat: Long, lng: Long) = Action.async {
-    Future.successful(Ok(JsNumber((Math.random() * 100).toInt)))
-  }
-
-  def weather(lat: Long, lng: Long) = Action.async {
     val percentOpenWeather: Future[Option[Int]] = weatherServices.getWeatherFeelingFromOpenWeather(lat, lng);
     percentOpenWeather.map { optionPercent =>
       optionPercent match {
