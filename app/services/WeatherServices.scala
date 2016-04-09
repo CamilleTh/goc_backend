@@ -6,13 +6,14 @@ import models.OpenWeather._
 import models.OpenWeatherResponse
 import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.{ JsValue, JsObject, JsArray }
+import scala.concurrent.Future
 
 case class OpenWeather(id: Long, main: String, description: String, icon: String)
 
 @Singleton
 class WeatherServices @Inject() (constants: Constants, ws: WSClient) {
 
-  def getWeatherFeelingFromOpenWeather(lat: Double, lng: Double) = {
+  def getWeatherFeelingFromOpenWeather(lat: Double, lng: Double):Future[Option[Int]] = {
 
     val url = constants.OPEN_WEATHER_API_URL;
     val urlWithParam = ws.url(url).withQueryString("appid" -> constants.OPEN_WEATHER_API_KEY, "lat" -> lat.toString(), "lon" -> lng.toString())

@@ -11,4 +11,7 @@ class Constants {
   val DATA_ACCIDENT = "ACCIDENT"
   val DATA_SECURITY = "SECURITY"
   val DATA_CRIMES = "CRIMES"
+  val DATA_WEATHER = "WEATHER"
+  val BAD_FEELING = "BAD"
+  val GOOD_FEELING = "GOOD"
 }
