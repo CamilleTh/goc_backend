@@ -11,6 +11,7 @@ import play.modules.reactivemongo.json.ImplicitBSONHandlers._
 class FeelServices @Inject()(val reactiveMongoApi: ReactiveMongoApi,constant:Constants)(implicit exec: ExecutionContext) {
 
   def feelings: Future[JSONCollection] = reactiveMongoApi.database.map(_.collection[JSONCollection]("feeling"))
+  def user_data: Future[JSONCollection] = reactiveMongoApi.database.map(_.collection[JSONCollection]("user-data"))
 
   def getFeelings(lat:Double,lng:Double,feeling_type:String) = {
     for {
@@ -72,6 +73,26 @@ class FeelServices @Inject()(val reactiveMongoApi: ReactiveMongoApi,constant:Con
           "feeling" -> constant.GOOD_FEELING,
           "date" -> Json.obj("$date" -> DateTime.now.getMillis),
           "type" -> feeling_type,
+          "geometry" -> Json.obj(
+            "$near" -> Json.obj(
+              "$geometry" -> Json.obj("type" -> "Point", "coordinates" -> JsArray(Seq(JsNumber(lat),JsNumber(lng)))),
+              "$maxDistance" -> 1000
+            )
+          ))
+      )
+    } yield {
+      last_error.ok
+    }
+  }
+  def addSpeed(lat:Double,lng:Double,speed:Int) = {
+    for {
+      userDataCol <- user_data
+      last_error <- userDataCol.insert(
+        Json.obj(
+          "type" -> constant.DATA_TRANSPORT,
+          "subtype" -> constant.DATA_ROAD_HOG,
+          "speed" -> speed,
+          "date" -> Json.obj("$date" -> DateTime.now.getMillis),
           "geometry" -> Json.obj(
             "$near" -> Json.obj(
               "$geometry" -> Json.obj("type" -> "Point", "coordinates" -> JsArray(Seq(JsNumber(lat),JsNumber(lng)))),

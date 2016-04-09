@@ -11,6 +11,7 @@ class Constants {
   val DATA_ROAD_HOG = "DATA_ROAD_HOG"
   val DATA_RADAR = "RADARS"
   val DATA_ACCIDENT = "ACCIDENT"
+  val DATA_SPEED = "SPEED"
   
   val DATA_DIGITAL = "DIGITAL"
   val DATA_COUVERTURE = "COUVERTURE"

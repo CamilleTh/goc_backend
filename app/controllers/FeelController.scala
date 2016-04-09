@@ -84,6 +84,17 @@ class FeelController @Inject()(val reactiveMongoApi: ReactiveMongoApi,val consta
       }.getOrElse(Future.successful(BadRequest))
     }
 
+  def addSpeed(speed:Int) = Action.async { request =>
+    request.body.asJson.flatMap{ jsonBody =>
+      jsonBody.asOpt[Coordinates] map { coordinate =>
+        feelServices.addSpeed(coordinate.lat,coordinate.lng,speed) map {
+          case true => Ok(JsNumber(speed))
+          case false => InternalServerError
+        }
+      }
+    }.getOrElse(Future.successful(BadRequest))
+  }
+
 }
 
 
