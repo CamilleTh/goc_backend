@@ -1,6 +1,5 @@
-package utils
+package models
 
-import models.Coordinates
 import play.api.libs.json.Json
 
 case class GeoCodageResponse(results:List[GeoCodageGeometry])
